@@ -50,30 +50,3 @@ D <- max(abs(empiricalCDF - pnorm(data)))
 set.seed (123)
 data <- data.frame(x = runif(200, 1, 10))
 data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
-
-set.seed (123)
-data <- data.frame(x = runif(200, 1, 10))
-data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
-
-library(ggplot2)
-ggplot(data, aes(x = data$y)) +
-  geom_density()
-
-linear_lik <- function(y, X, theta) {
-  n      <- nrow(X)
-  k      <- ncol(X)
-  beta   <- theta[1:k]
-  sigma2 <- theta[k+1]^2
-  e      <- y - X%*%beta
-  logl   <- -.5*n*log(2*pi)-.5*n*log(sigma2) - ( (t(e) %*% e)/ (2*sigma2) )
-  return(-logl)
-}
-
-linear_MLE <- optim(fn=linear_lik, y =data$y, X =cbind(1, data$x), par=c(1,1,1), hessian=TRUE, method="BFGS")
-linear_MLE$par
-# estimates intecept beta 1 and sigma
-
-coef(glm(data$y~data$xm))
-
-
-summary(lm(data$y~data$x))
