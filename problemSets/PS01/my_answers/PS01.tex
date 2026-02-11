@@ -32,6 +32,7 @@
 \usepackage{url}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{tabularx}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -62,7 +63,7 @@
 
 \title{Problem Set 1}
 \date{Due: February 11, 2026}
-\author{Applied Stats II}
+\author{Applied Stats II: Ellen Beattie}
 
 
 \begin{document}
@@ -89,21 +90,145 @@ $$p(D \leq d)= \frac{\sqrt {2\pi}}{d} \sum _{k=1}^{\infty }e^{-(2k-1)^{2}\pi ^{2
 
 \noindent which generally requires approximation methods (see \href{https://core.ac.uk/download/pdf/25787785.pdf}{Marsaglia, Tsang, and Wang 2003}). This so-called non-parametric test (this label comes from the fact that the distribution of the test statistic does not depend on the distribution of the data being tested) performs poorly in small samples, but works well in a simulation environment. Write an \texttt{R} function that implements this test where the reference distribution is normal. Using \texttt{R} generate 1,000 Cauchy random variables (\texttt{rcauchy(1000, location = 0, scale = 1)}) and perform the test (remember, use the same seed, something like \texttt{set.seed(123)}, whenever you're generating your own data).\\
 	
+	\vspace{3cm}
+	This function aims to implement a test for Kolmogorov's goodness-of-fit measure with a normal reference distribution for large samples by creating a test statistic $D_n$ and computing the p value, $Pr(D_n < d)$ that returns a measure of surprise of the test statistic under the null i.e. if the data really did originate from a normal distribution how likely is it to see this maximum difference between the theoretical and observed CDFs? \\
 	
-\noindent As a hint, you can create the empirical distribution and theoretical CDF using this code:
+	For large samples, to compute the p-value approximation methods are valuable to reduce computation time as explored in Marsaglia, Tsang, and Wang (2003). They use $x$ an asymptotic variable after scaling by size ($\sqrt[]{n}$) such that $x = \sqrt[]{n} D_n $. This scaled version means that the limiting distribution is instead  $Pr(\sqrt[]{n}  D_n \le x) \rightarrow L(x)$  where $x$ can range from zero to infinity.
+	
+	The function therefore uses the the limiting form of the distribution Kolmogrov's $D_n$ explored in the paper:
+		$$ \lim_{n \to \infty} Pr\!(\sqrt{n}\, D_n \le x\bigr)
+			= 1 - 2 \sum_{i=1}^{\infty} (-1)^{i-1} e^{-2 i^{2} x^{2}} $$
+	As the p-value is an upper-tail probability $p = 1- Pr(\sqrt[]{n}D_n)$, the p-value can be calculated as $P(D> x) =p(x) = 2 \sum_{i=1}^{\infty} (-1)^{i-1} e^{-2 i^{2} x^{2}}$.
+	This formula is translated into a R loop, that iterates over the indexes i until the exponential terms become negligible,  summing over the terms to get the probability of observing a deviation this large (from the theoretical cdf) if the null hypothesis was true. This converges rapidly, as the exponential section $e^{(-2i^2)(x^2)}$ shrinks very quickly until the next term is tiny (with the conditions for convergence is the next iteration is smaller than the designed tolerance 'tol' that can be set depending on the specificity).  \\
+	In addition to this as Marsaglia et al. note that if the scaled value is very large ($d\sqrt[]{n}$ exceeds about 1.94) it can be beneficial to an extra 'shortcut' condition that returns a probability with sufficient accuracy but protects against excessively slow matrix computations.  It instead returns $K(n,d) \approx 1 - 2e^{-(2.000071 + .331/\sqrt[]{n} + 1.409/n)}$, returning less than .0000005 maximum error. \\
+	 Therefore the very large x,  p-value upper-tail probability is $p = 1 - [1 - 2 * summed terms]$ which simplifies to just $2 * summed terms$ . These two approximations are included in the function (depending on the value of x as to which one is used) to determine a p-value for large n Kolmogrov's test statistic.
+	
 
-\begin{lstlisting}[language=R]
-	# create empirical distribution of observed data
-	ECDF <- ecdf(data)
-	empiricalCDF <- ECDF(data)
-	# generate test statistic
-	D <- max(abs(empiricalCDF - pnorm(data))) \end{lstlisting}
-
+	
+	\lstinputlisting[language=R, firstline=35,lastline= 63]{PS01.R} 
+	This function uses if else to apply different approximation methods depending on x (the scaled statistic), using the previously mentioned p value formula from Marsaglia et al. 2003. Applying the function to the rcauchy data returns a test statistic of 0.135 and a p-value of 2.76e-16. There is statistically significant evidence to reject the null hypothesis that the data distribution is normal, and accept that empirical distribution of the data differs from a normal distribution. \\
+	\lstinputlisting[language=R, firstline=65,lastline= 67]{PS01.R}
+	\begin{verbatim}
+		$`Test Statistic D`
+		[1] 0.1347281
+		
+		$`P-Value`
+		[1] 2.760067e-16
+	\end{verbatim}
+	
+	Using the built in R function on the same data we can see slight differences in D and P-value likely due to slightly different methods of approximation. The conclusions drawn from the test remain the same however. 
+		\lstinputlisting[language=R, firstline=70,lastline= 70]{PS01.R}
+	\begin{verbatim}
+		Asymptotic one-sample Kolmogorov-Smirnov test
+		
+		data:  data
+		D = 0.13573, p-value < 2.2e-16
+		alternative hypothesis: two-sided
+	\end{verbatim}
+	
+ 
 \vspace{3in}
 
 \section*{Question 2}
 \noindent Estimate an OLS regression in \texttt{R} that uses the Newton-Raphson algorithm (specifically \texttt{BFGS}, which is a quasi-Newton method), and show that you get the equivalent results to using \texttt{lm}. Use the code below to create your data.
 \vspace{.5cm}
-\lstinputlisting[language=R, firstline=51,lastline=53]{PS01.R} 
+\lstinputlisting[language=R, firstline=78,lastline=80]{PS01.R}  
+
+The Newton-Raphson algorithm method to estimate an OLS regression, uses maximum likelihood estimation to estimates for parameters, by using the likelihood function to determine the value of a parameter that gives the greatest probability of observing the data (rather than minimising least squares). The Newton-Raphson algorithm uses iterative weighted least squares to determine the most likely beta values and constant variance given the observed data.  \\
+We assume that the points follow a normal probability distribution (as can be explored looking at density graph of y). \\
+\lstinputlisting[language=R, firstline=84,lastline=86]{PS01.R}  
+We write down the log likelihood function based on the normal distribution probability density function, take the derivatives with respect to the parameters (betas and sigma squared), set to zero and solve to find find the parameter values (betas and sigma2)that maximise this probability for the inputted data. 
+The optim function works by iterating through different parameter values and their respective maximum likelihood score until it finds the combination with the maxmimum likelihood score and reports the corresponding parameter values (actually does the min but log likelihood is reverse so equivalent to max) . The log transformation of likelihood is used as it allows the summation of probability of likelihoods rather than the more computationally expensive product of probabilities. \\  
+
+Creating the linear likelihood function and using it to run MLE and find the parameter estimates can be seen below. Note: the starting parameter values are '1,1,1' (but this won't effect the outcome). The Hessian Matrix created also can be used to generate the standard errors for the estimates by finding the matrix inverse (without negative as the reverse log likelihood is used and negatives cancel out) then taking the square root of the covariance matrix diagonal to extract the corresponding standard errors for the estimates. 
+\lstinputlisting[language=R, firstline=89,lastline=125]{PS01.R} 
+	% latex table generated in R 4.5.1 by xtable 1.8-4 package
+	% Sun Feb  8 15:50:17 2026
+	\begin{table}[ht]
+		\centering
+		\begin{tabular}{ccc}
+			\hline
+			Parameter & Estimate \\ 
+			\hline
+			Intercept & 0.13983
+			(0.25141) \\ 
+			 x & 2.72655
+			(0.04136) \\ 
+			 Sigma2 & -1.43907
+			(0.07191) \\ 
+			\hline
+		\end{tabular}
+	\end{table} 
+	\vspace*{1cm}
+	
+	These parameter estimates are the values that best explain the data according to the likelihood. Given that it solves linear regression using the identity link the interpretation of estimates are the same as OLS. \\
+	 A one unit increase in x is associated with, on average, a 2.726 increase in y, overwhelmingly statistically significant $(2.72655/0.04136 = 65$). It is also very near the specified $2.75$ slope when creating the data (slightly impacted because of the noise). The intercept is not statistically significant from zero ($.12983/.25141 = 0.55 < 1.96$) which is likely given the inputted data was zero. \\
+	
+	\newpage
+	The same data is ran for a linear OLS regression using lm function. We find the same estimates values for the parameters using OLS. This is as expected as OLS is a special case of MLE, they are both solving the same optimisation problem and under normal errors maximising the likelihood is equivalent to minimising the sum of squares.   \\
+	
+	
+	\lstinputlisting[language=R, firstline=128,lastline=132]{PS01.R} 
+
+	% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+	% Date and time: Sun, Feb 08, 2026 - 15:28:42
+	\begin{table}[!htbp] \centering 
+		\caption{OLS Linear Regession lm} 
+		\label{} 
+		\begin{tabular}{@{\extracolsep{5pt}}lc} 
+			\\[-1.8ex]\hline 
+			\hline \\[-1.8ex] 
+			& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+			\cline{2-2} 
+			\\[-1.8ex] & y \\ 
+			\hline \\[-1.8ex] 
+			x & 2.727$^{***}$ \\ 
+			& (0.042) \\ 
+			& \\ 
+			Constant & 0.139 \\ 
+			& (0.253) \\ 
+			& \\ 
+			\hline \\[-1.8ex] 
+			Observations & 200 \\ 
+			R$^{2}$ & 0.956 \\ 
+			Adjusted R$^{2}$ & 0.956 \\ 
+			Residual Std. Error & 1.447 (df = 198) \\ 
+			F Statistic & 4,298.687$^{***}$ (df = 1; 198) \\ 
+			\hline 
+			\hline \\[-1.8ex] 
+			\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+		\end{tabular} 
+	\end{table} 
+	
+	\newpage
+	This result is the same additionally using the built in Gaussian GLM function but the log likelihood and AIC scores are displayed.
+	\lstinputlisting[language=R, firstline=135,lastline=139]{PS01.R} 
+	% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+	% Date and time: Sun, Feb 08, 2026 - 15:29:45
+	\begin{table}[!htbp] \centering 
+		\caption{GLM gaussian} 
+		\label{} 
+		\begin{tabular}{@{\extracolsep{5pt}}lc} 
+			\\[-1.8ex]\hline 
+			\hline \\[-1.8ex] 
+			& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+			\cline{2-2} 
+			\\[-1.8ex] & y \\ 
+			\hline \\[-1.8ex] 
+			x & 2.727$^{***}$ \\ 
+			& (0.042) \\ 
+			& \\ 
+			Constant & 0.139 \\ 
+			& (0.253) \\ 
+			& \\ 
+			\hline \\[-1.8ex] 
+			Observations & 200 \\ 
+			Log Likelihood & $-$357.653 \\ 
+			Akaike Inf. Crit. & 719.306 \\ 
+			\hline 
+			\hline \\[-1.8ex] 
+			\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+		\end{tabular} 
+	\end{table}  
 
 \end{document}
