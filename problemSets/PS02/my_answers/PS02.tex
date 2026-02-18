@@ -1,0 +1,331 @@
+%Setup%
+\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{xcolor}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{placeins}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Problem Set 2}
+\date{Due: February 18, 2026}
+\author{Applied Stats II}
+
+
+\begin{document}
+	\maketitle
+	\section*{Instructions}
+	\begin{itemize}
+		\item Please show your work! You may lose points by simply writing in the answer. If the problem requires you to execute commands in \texttt{R}, please include the code you used to get your answers. Please also include the \texttt{.R} file that contains your code. If you are not sure if work needs to be shown for a particular problem, please ask.
+		\item Your homework should be submitted electronically on GitHub in \texttt{.pdf} form.
+		\item This problem set is due before 23:59 on Wednesday February 18, 2026. No late assignments will be accepted.
+
+	\end{itemize}
+
+	\vspace{.25cm}
+
+\noindent We're interested in what types of international environmental agreements or policies people support (\href{https://www.pnas.org/content/110/34/13763}{Bechtel and Scheve 2013)}. So, we asked 8,500 individuals whether they support a given policy, and for each participant, we vary the (1) number of countries that participate in the international agreement and (2) sanctions for not following the agreement. \\
+
+\noindent Load in the data labeled \texttt{climateSupport.RData} on GitHub, which contains an observational study of 8,500 observations.
+
+\begin{itemize}
+	\item
+	Response variable: 
+	\begin{itemize}
+		\item \texttt{choice}: 1 if the individual agreed with the policy; 0 if the individual did not support the policy
+	\end{itemize}
+	\item
+	Explanatory variables: 
+	\begin{itemize}
+		\item
+		\texttt{countries}: Number of participating countries [20 of 192; 80 of 192; 160 of 192]
+		\item
+		\texttt{sanctions}: Sanctions for missing emission reduction targets [None, 5\%, 15\%, and 20\% of the monthly household costs given 2\% GDP growth]
+		
+	\end{itemize}
+	
+\end{itemize}
+
+\newpage
+\noindent Please answer the following questions:
+
+\begin{enumerate}
+	\item
+	Remember, we are interested in predicting the likelihood of an individual supporting a policy based on the number of countries participating and the possible sanctions for non-compliance.
+	\begin{enumerate}
+		\item [] Fit an additive model. Provide the summary output, the global null hypothesis, and $p$-value. Please describe the results and provide a conclusion.\\
+		
+		Since the response is binary rather than continuous (1 if agree with policy and 0 if not ) to fit an additive model it would be preferable to use logistic regression rather than OLS. Logistic regression bound predicted probabilities between possible outcomes [0,1] and does not require the same assumptions as OLS such as constant variance and normal errors. 
+		Instead we can use a logistic model that determines the probability of getting a specific outcome conditional on X, writing as a logistic function of $X_i$
+		
+		$$\pi_i = P(Y_i = 1|X_i) = E(Y_i|X_i) = \frac{e^{\beta_0 + \beta_1X_{1i} + … + \beta_k X_{ki}}}{1 + e^{\beta_0 + \beta_1X_{1i} + … + \beta_k X_{ki}}} $$
+			
+		By taking a log transformation we return the log odds (logit function) that is linearly associated with covariates. This is the canonical link for the Bernoulli distribution is used for MLE estimation as it transforms bounded (0-1) probabilities to values that have infinite range, where the logit of p is linear in X. 
+		
+		$$ log(\frac{\pi_i}{1-\pi_i}) = \beta_0 + \beta_1X_{1i} + … + \beta_k X_{ki} $$
+		
+		This enables us to set up a GLM that uses maximum likelihood estimation instead of least squares to determine the best parameter estimates that predicts observed outcomes. The log odds of an individual agreeing with the policy (choice = 1) is modelled below where the reference category is $Countries20/192 $and$ Sanctions None $
+			
+
+		$$ log(\frac{p}{1-p}) = \beta_0 + \beta_1Countries80/192  + \beta_2Countries  160/192  $$
+			$$ + \beta_3Sanctions5\% + \beta_4Sanctions15\% + \beta_5Sanctions20\% $$
+		
+			
+		Using contr.treatment factors with many levels are automatically converted into a sequence of dummies (as above)..
+		\lstinputlisting[language=R, firstline=41, lastline= 59]{PS02.R}
+		
+		
+		
+		% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+		% Date and time: Tue, Feb 17, 2026 - 20:08:10
+		\begin{table}[!htbp] \centering 
+			\caption{Impact of Number of Countries and Sanctions on Choice} 
+			\label{} 
+			\begin{tabular}{@{\extracolsep{5pt}}lc} 
+				\\[-1.8ex]\hline 
+				\hline \\[-1.8ex] 
+				& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+				\cline{2-2} 
+				\\[-1.8ex] & Choice on policy support \\ 
+				\hline \\[-1.8ex] 
+				Countries 80 of 192 & 0.336$^{***}$ \\ 
+				& (0.054) \\ 
+				& \\ 
+				Countries 160 of 192 & 0.648$^{***}$ \\ 
+				& (0.054) \\ 
+				& \\ 
+				Sanctions 5\% & 0.192$^{***}$ \\ 
+				& (0.062) \\ 
+				& \\ 
+				Sanctions 10\% & $-$0.133$^{**}$ \\ 
+				& (0.062) \\ 
+				& \\ 
+				Sanctions 20\% & $-$0.304$^{***}$ \\ 
+				& (0.062) \\ 
+				& \\ 
+				Constant & $-$0.273$^{***}$ \\ 
+				& (0.054) \\ 
+				& \\ 
+				\hline \\[-1.8ex] 
+				Observations & 8,500 \\ 
+				Log Likelihood & $-$5,784.130 \\ 
+				Akaike Inf. Crit. & 11,580.260 \\ 
+				\hline 
+				\hline \\[-1.8ex] 
+				\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+			\end{tabular} 
+		\end{table} 
+		\FloatBarrier
+		\vspace{0.5cm}
+		The returning model finds every individual coefficient to be statistically significant to the 0.05 level. This means there is evidence that countries and sanctions are associated with the log-odds of policy choice, with changes in each predictor having a multiplicative change in the odds of policy agreement holding other variables constant. \\
+		
+		To test the significance of model we want to test the model against a global null that none the predictors have an effect on the outcome. \newline \\
+		$H_0:$ All $\beta_i = 0$ \newline
+		 $H_1:$ At least one of the $\beta \ne 0 $ \\
+		
+		To test this null we use a likelihood ratio test (LRT) that compares the full fitted model with a null model (with no explanatory variables) to compute a test statistic and p-value. \\
+		
+		\lstinputlisting[language=R, firstline=61, lastline= 67]{PS02.R}
+		\begin{verbatim}
+			Analysis of Deviance Table
+			
+			Model 1: choice ~ 1
+			Model 2: choice ~ countries + sanctions
+			Resid. Df Resid. Dev Df Deviance  Pr(>Chi)    
+			1      8499      11783                          
+			2      8494      11568  5   215.15 < 2.2e-16 ***
+			---
+			Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+		\end{verbatim}
+		
+	Since $ p = 2.2e-16 $ is significantly lower than the standard threshold $\alpha  = 0.05$ we have sufficient evidence to reject the global null and accept that at least one of the predictors (countries or sanctions) affects the probability that participants will agree with the policy.  Moreover we can see in the estimate table that every covariate is statistically impactful on the probability of the agreeing with the policy. 
+		
+	\end{enumerate}
+	\vspace{1cm}
+	\item
+	If any of the explanatory variables are statistically significant in this model, then:
+	\begin{enumerate}
+		\item
+		For the policy in which nearly all countries participate [160 of 192], how does increasing sanctions from 5\% to 15\% change the odds that an individual will support the policy? (Interpretation of a coefficient) \\
+		
+			To calculate the change in odds need to calculate the log odds of both sanctions conditions for a policy with 160 countries partipating using the estimated coefficients, all else held constant.  \newline
+			
+			160 of 192 with 5\% sanctions : $-0.27266 + 0.64835 + 0.19186 = 0.56755$ \newline
+			160 of 192 with 15\% sanctions: $-0.27266 + 0.64835 - 0.13325 = 0.24244 $ \newline
+			Difference in log odds: $\Delta_{LO} = 0.24244 - 0.56755 = -0.32511$ \newline
+			 (intercept and countries estimate cancel out) \newline
+			
+			Odds ratio: $OR = e^{\Delta_{LO}} = e^{-0.32511} = 0.72244788$  \newline \\
+			For a policy with 160 of 192 countries participating, going from 5\% to 15\% sanctions reduces the odds of policy agreement, on average, by a multiplicative factor of 0.72244788 holding all else constant (i.e. decreasing the odds by 27.75\%). \\
+			
+		\item
+		For the policy in which very few countries participate [20 of 192], how does increasing sanctions from 5\% to 15\% change the odds that an individual will support the policy? (Interpretation of a coefficient) \\
+		
+		The change in odds will be the same as above as the model is additive on the log-odds scale. The different in log-odds i.e. moving from 5\% to 15\% sanctions is independent of the category of number of countries in the policy has therefore cancels  out and is no difference between 160 or 20 of the 192. The change would still therefore be that going from 5\% to 15\% sanctions when very few countries participate (20 of 192) reduces the odds of policy agreement, on average, by a multiplicative factor of 0.72244788 holding all else constant. 
+		
+		The odds ratio for a change in one factors is constant across all levels of the other factors in this additive model and would only change if the model included an interaction term. \\
+		
+		\item
+		What is the estimated probability that an individual will support a policy if there are 80 of 192 countries participating with no sanctions? \\
+			
+			To calculate the estimated probability need to first calculate the log odds of agreement for when there 80/192 countries and no sanctions, all else held constant. Since no sanctions is the baseline category we just need the intercept and effect moving from 20 to 80 countries.  \newline \
+			
+			
+			80 of 192 with No sanctions:  $\beta_0 + \beta_1 = -.27266 + .33636 = 0.0637$ \newline
+			
+			We can then convert the log odds to the probability using:
+			$$ P(Y = 1 | Countries 80 of 192, Sanctions None) = \frac { e^{logit(P)}}{1+e^{logit(P)}} = \frac{e^{.0637}}{1+e^{.0637}} = 0.515991 $$ \newline
+			
+			The estimate probability that an individual will support a policy if there are 80 of 192 countries participating with no sanctions is 0.5159 i.e 51.59\%. \\
+	
+	\end{enumerate}
+	\vspace{1cm}
+	\item
+	Would the answers to 2a and 2b potentially change if we included an interaction term in this model? Why? 
+	\begin{itemize}
+		\item Perform a test to see if including an interaction is appropriate.
+	\end{itemize}
+	
+	Yes the answers would potentially change with an interaction included. The log-odds change when moving from sanction categories now would depend on the number of countries participating as the interaction term would add a different amount for each combination. This would greatly increase the complexity of the model interpretations and should only be done if including the interaction improves model fit to a degree that it is worth the additional complexity. This can be tested using a partial likelihood ratio test (following a central Chi-Squared distribution under the null being true). \newline
+	
+	$H_0:$ The interaction coefficients are zero \newline 
+	$H_1$: At least one of the interaction terms are non-zero. 
+	
+	If the null is true it means adding the interaction terms added are not significantly different from just the additive model. First we must run an new model with interactions include then compare using an ANOVA . \\
+	
+	\lstinputlisting[language=R, firstline=73, lastline= 79]{PS02.R}
+	
+	
+	The results of the test determine a p-value $p = 0.3912$ that is larger than the standard threshold $ \alpha = 0.05$, thus providing sufficient evidence that the interactive model fit is not significantly better than the additive model. Therefore, it would be more appropriate to continue with the additive model rather than adding an interaction for parsimony and ease of interpretation.  
+	
+	\begin{verbatim}
+		Analysis of Deviance Table
+		
+		Model 1: choice ~ countries + sanctions
+		Model 2: choice ~ countries + sanctions + countries * sanctions
+		Resid. Df Resid. Dev Df Deviance Pr(>Chi)
+		1      8494      11568                     
+		2      8488      11562  6   6.2928   0.3912
+	\end{verbatim}
+	
+	Moreover when we see the  results of the interaction model there are many estimates and none of the interaction terms appear to be individually significant. 
+	\lstinputlisting[language=R, firstline=81, lastline= 84]{PS02.R}
+	
+	
+	% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+	% Date and time: Wed, Feb 18, 2026 - 11:11:54
+	\begin{table}[!htbp] \centering 
+		\caption{Impact of Number of Countries and Sanctions on Choice with Interaction} 
+		\label{} 
+		\begin{tabular}{@{\extracolsep{5pt}}lc} 
+			\\[-1.8ex]\hline 
+			\hline \\[-1.8ex] 
+			& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+			\cline{2-2} 
+			\\[-1.8ex] & Choice on policy support \\ 
+			\hline \\[-1.8ex] 
+			countries80 of 192 & 0.376$^{***}$ \\ 
+			& (0.106) \\ 
+			& \\ 
+			countries160 of 192 & 0.613$^{***}$ \\ 
+			& (0.108) \\ 
+			& \\ 
+			sanctions5\% & 0.122 \\ 
+			& (0.105) \\ 
+			& \\ 
+			sanctions15\% & $-$0.097 \\ 
+			& (0.108) \\ 
+			& \\ 
+			sanctions20\% & $-$0.253$^{**}$ \\ 
+			& (0.108) \\ 
+			& \\ 
+			countries80 of 192:sanctions5\% & 0.095 \\ 
+			& (0.152) \\ 
+			& \\ 
+			countries160 of 192:sanctions5\% & 0.130 \\ 
+			& (0.151) \\ 
+			& \\ 
+			countries80 of 192:sanctions15\% & $-$0.052 \\ 
+			& (0.152) \\ 
+			& \\ 
+			countries160 of 192:sanctions15\% & $-$0.052 \\ 
+			& (0.153) \\ 
+			& \\ 
+			countries80 of 192:sanctions20\% & $-$0.197 \\ 
+			& (0.151) \\ 
+			& \\ 
+			countries160 of 192:sanctions20\% & 0.057 \\ 
+			& (0.154) \\ 
+			& \\ 
+			Constant & $-$0.275$^{***}$ \\ 
+			& (0.075) \\ 
+			& \\ 
+			\hline \\[-1.8ex] 
+			Observations & 8,500 \\ 
+			Log Likelihood & $-$5,780.983 \\ 
+			Akaike Inf. Crit. & 11,585.970 \\ 
+			\hline 
+			\hline \\[-1.8ex] 
+			\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+		\end{tabular} 
+	\end{table} 
+	
+	\end{enumerate}
+
+
+\end{document}
