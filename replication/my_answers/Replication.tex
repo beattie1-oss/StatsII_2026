@@ -1,0 +1,588 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{adjustbox}
+\usepackage{caption}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{placeins}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{booktabs}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Replication}
+\date{Due: 1st April 2026}
+\author{Applied Stats II}
+
+
+\begin{document}
+	\maketitle
+	
+\tableofcontents
+\vspace*{1cm}
+	
+\section{Original Summary}
+
+	This project seeks to replicate the study by \href[]{https://www.cambridge.org/core/journals/journal-of-experimental-political-science/article/abs/can-warm-behavior-mitigate-the-negative-effect-of-unfavorable-governmental-decisions-on-citizens-trust/7CF8D6780138BF27D4A61395446BCB57#article} {Hansen, F. G. (2023). Can Warm Behavior Mitigate the Negative Effect of Unfavorable Governmental Decisions on Citizens’ Trust? Journal of Experimental Political Science, 10(1), 62–75. doi:10.1017/XPS.2021.23}. \\
+	
+	This study investigates how the type and nature of citizen-bureaucrat encounters impact an individual's levels of government trust. Political science literature highlights how fundamental trust is in the government-citizen relationship, with citizens basing their trust and support of their government based on performance (e.g. economic impact) and decisions that fit their policy preferences. The author notes that there is less literature investigating how direct interactions with the government, such as when people interact with bureaucrats when they apply for public services, impact the dynamic between citizens and the government. There is some evidence that decision favourability in bureaucratic applications is important for improving trust, and if the decisions made are unfavourable to the individual this weakens their trust in the government.\\
+	
+	
+	Hansen also highlights insights from social psychology that emphasise the importance of first impressions on evaluative judgements when interacting with new people. In particular, he discusses the dimension of Warmth that includes measures such as friendliness, kindness and likeability. When citizens interact with government employees, what is the impact on the perceived traits of this employee and does this impact broader government trust?   Hansen posits that if these government employees are warm and friendly in their decision process, even if the outcome is unfavourable,  it will lessen the distrust they have in the government. \\
+	
+	\noindent Hence, Hansen seeks to test two main hypotheses with the experiment: \\
+	
+		\textit{H1:  Citizens have lower trust in government the more unfavourable a decision is to the	individual.} \\
+		
+		\textit{H2: The effect of decision favourability on citizens’ trust in government depends on whether bureaucrats show warmth in the decision-making process. The negative effect of unfavourable decisions is weaker when bureaucrats show high warmth compared to showing low warmth.} \\
+	
+		
+	\noindent  
+	To test these hypotheses, Hansen conducts a 2x2 survey experiment on a representative sample of Danish citizens ($n = 1613$) in 2021 recruited through YouGov's web panel. The experiment was based on a vignette about Danish public nursing homes,where each respondent was encouraged to imagine helping a close relative with the application for a nursing home place. Two key aspects were manipulated:  the favourability of the decision by the caseworker i.e. whether the application was accepted (Favourable) or rejected (Unfavourable); and the warmth of employee i.e whether the caseworker was described as friendly, kind, likeable, good-natured (Warm) or unfriendly, unresponsive, not very welcoming etc. (Non-Warm). Each individual was then asked to measure their trust on a 0-10 scale: trust in caseworker and trust in local government ("How much do you personally trust the caseworker/municipality to make the right decisions?" where 0=No trust at all and 10= Completely trust). They were also asked to rate the caseworker on traits relevant to warmth and procedural fairness (on a 1-7 scale where  1= "Very unfavourable" and 7="Very favourable") to test the effect of the manipulations. A test for attention at the end was included asking what service area the vignette had described. Demographic questions were included such as age, gender, education but also whether they had a close relative living at a nursing home.  
+
+\vspace{1cm}
+\section{Data}
+	Required packages were loaded, as was the data from the online files.  
+	\lstinputlisting[language=R, firstline=25, lastline= 28]{replication_EB.R} 
+	\lstinputlisting[language=R, firstline=36, lastline= 47]{replication_EB.R} 
+	\begin{Verbatim}
+ [1] "caseid"            "user"             
+[3] "pubsector_pref"    "treatment_groups" 
+[5] "q5"                "fair"             
+[7] "neutral"           "unbiased"         
+[9] "warm"              "friendly"         
+[11] "likable"           "competent"        
+[13] "intelligent"       "capable"          
+[15] "gender"            "age"              
+[17] "education_rc"      "ideology"         
+[19] "age_1"             "edu"              
+[21] "attention"         "trust_m"          
+[23] "trust_b"           "of_treatment"     
+[25] "warmth_treatment"  "perc_warmth"      
+[27] "perc_fairness"     "perc_competence"  
+[29] "perc_favorability"
+	\end{Verbatim}
+	
+	
+	\begin{table}
+		\caption{Head of dataset with selected variables}
+		\begin{tabular}{rrllrrr}
+			\toprule
+			caseid & treatment\_groups & of\_treatment & warmth\_treatment & trust\_b & trust\_m & gender\\
+			\midrule
+			1818592968 & 3 & 1 & 0 & 0.5 & 0.0 & 0\\
+			1823485372 & 1 & 0 & 1 & 0.3 & 0.3 & 1\\
+			1823435322 & 1 & 0 & 1 & 0.3 & 0.3 & 1\\
+			1823435332 & 4 & 0 & 0 & 0.2 & 0.2 & 1\\
+			1823492020 & 3 & 1 & 0 & NA & NA & 0\\
+			1821707542 & 1 & 0 & 1 & 0.6 & 0.5 & 0\\
+			1823492796 & 4 & 0 & 0 & 0.7 & 0.7 & 1\\
+			1823492886 & 1 & 0 & 1 & 0.5 & 0.7 & 1\\
+			1823373596 & 3 & 1 & 0 & 0.8 & 0.8 & 0\\
+			1823493046 & 3 & 1 & 0 & 0.0 & 0.0 & 0\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\FloatBarrier
+	
+	Full details of the variables are provided in the \href{https://dataverse.harvard.edu/file.xhtml?fileId=4864294&version=1.0}{codebook} 
+	Demographic variables are coded as standard (i.e. Gender; Male = 0, Female = 1). 
+	The "treatment\_groups" were allocated a code for the specific experimental groups participants: \\
+		\begin{itemize}
+			\item 1 = High warmth / Unfavourable outcome
+			\item 2 = High warmth / Favourable Outcome
+			\item 3 = Low warmth / Favourable Outcome
+			\item 4 = Low Warmth / Unfavourable Outcome
+		\end{itemize} 
+	The two experimental treatments were also coded into dummy variables: 'of\_treatment' (0 = Unfavourable, 1 = Favourable) and 'warmth\_treatment' (0 = Low Warmth, 1 = High Warmth) \\
+	
+	
+	The data provided has already undergone some level of pre-processing. Outcome variables 'trust\_b' and 'trust\_m' refer to the trust of the bureaucrat and the municipality respectively (where 0=No trust at all; 1 = Complete trust). This has been rescaled from a '0-10' scale to a '0-1' scale (according to the paper) although no reason was given for this. All values in the paper are therefore decimals at 0.1 intervals.
+	\lstinputlisting[language=R, firstline=48, lastline= 49]{replication_EB.R} 
+	\begin{Verbatim}
+		[1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+		[1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+	\end{Verbatim}
+	Additive indexes of overall perceived warmth, competence, fairness (on 0-1 scale) and the perceived favourability of the decision were made (0 or 1) were created from item loadings on individual measures e.g. warmth from perceived warmth, friendliness and likeability scales (that were measured on 0-7 scale). These were used to test the validity of the experimental manipulations. 
+	
+	
+\vspace{1cm}
+\section{Study Replication}
+	The author starts by running manipulation tests for both perceived favourability and warmth using pairwise t-tests. These test to see if the experimental conditions manipulations were successful i.e was there a statistically significant increase in the perceived warmth of the caseworker for those in the Warmth condition (experimental groups 1 and 2)  and in the perceived favourability of the decision for those in the Favourable condition (experimental groups 2 and 3). 
+	\lstinputlisting[language=R, firstline=55, lastline= 62]{replication_EB.R}
+	\begin{Verbatim}
+of_treatment variable              n  mean    sd
+<dbl> <fct>             <dbl> <dbl> <dbl>
+1            0 perc_favorability   682 0.227 0.246
+2            1 perc_favorability   675 0.674 0.244
+
+
+Pairwise comparisons using t tests with pooled SD 
+data:  data$perc_favorability and data$of_treatment 
+
+0     
+1 <2e-16
+
+P value adjustment method: none 
+	\end{Verbatim}
+	\FloatBarrier
+	\lstinputlisting[language=R, firstline=65, lastline= 72]{replication_EB.R}
+	\begin{Verbatim}
+warmth_treatment variable        n  mean    sd
+<dbl> <fct>       <dbl> <dbl> <dbl>
+1                0 perc_warmth   762 0.187 0.24 
+2                1 perc_warmth   737 0.702 0.233
+
+
+Pairwise comparisons using t tests with pooled SD 
+data:  data$perc_warmth and data$warmth_treatment 
+
+0     
+1 <2e-16
+
+P value adjustment method: none 
+	\end{Verbatim}
+	\FloatBarrier
+	Both of these tests were statistically significant indicating the treatment conditions were successful. \\
+	
+	The main OLS regression models are run. For both outcome trust measures (in the bureaucrat and the municipality) two models are ran, a simple model with just the treatment variables and one including an interaction. 
+	\lstinputlisting[language=R, firstline=77, lastline= 101]{replication_EB.R}
+	
+	 The table below represents the OLS results for the four models and is identical to the main results table in the paper. 
+	 
+	 	% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+	 	% Date and time: Wed, Mar 25, 2026 - 11:40:08
+	 	\begin{table}[!htbp] \centering 
+	 		\caption{OLS Experimental Results} 
+	 		\label{} 
+	 		\resizebox{\textwidth}{!}{
+	 		\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
+	 			\\[-1.8ex]\hline 
+	 			\hline \\[-1.8ex] 
+	 			& \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
+	 			\cline{2-5} 
+	 			\\[-1.8ex] & \shortstack{Trust \\ Bureaucrat} & \shortstack{Trust \\ Municipality} & \shortstack{Trust \\ Bureaucrat} & \shortstack{Trust \\ Municipality} \\ 
+	 			\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
+	 			\hline \\[-1.8ex] 
+	 			Outcome favorability (OF) & 0.188$^{***}$ & 0.179$^{***}$ & 0.171$^{***}$ & 0.171$^{***}$ \\ 
+	 			& (0.012) & (0.012) & (0.017) & (0.017) \\ 
+	 			& & & & \\ 
+	 			Warmth & 0.091$^{***}$ & 0.047$^{***}$ & 0.073$^{***}$ & 0.039$^{**}$ \\ 
+	 			& (0.012) & (0.012) & (0.017) & (0.017) \\ 
+	 			& & & & \\ 
+	 			OF * Warmth &  &  & 0.035 & 0.016 \\ 
+	 			&  &  & (0.024) & (0.024) \\ 
+	 			& & & & \\ 
+	 			Constant & 0.329$^{***}$ & 0.355$^{***}$ & 0.338$^{***}$ & 0.359$^{***}$ \\ 
+	 			& (0.011) & (0.010) & (0.012) & (0.012) \\ 
+	 			& & & & \\ 
+	 			\hline \\[-1.8ex] 
+	 			Observations & 1,516 & 1,525 & 1,516 & 1,525 \\ 
+	 			R$^{2}$ & 0.163 & 0.136 & 0.164 & 0.137 \\ 
+	 			Adjusted R$^{2}$ & 0.162 & 0.135 & 0.163 & 0.135 \\ 
+	 			Residual Std. Error & 0.237 (df = 1513) & 0.233 (df = 1522) & 0.236 (df = 1512) & 0.233 (df = 1521) \\ 
+	 			F Statistic & 147.665$^{***}$ (df = 2; 1513) & 120.190$^{***}$ (df = 2; 1522) & 99.197$^{***}$ (df = 3; 1512) & 80.248$^{***}$ (df = 3; 1521) \\ 
+	 			\hline 
+	 			\hline \\[-1.8ex] 
+	 			\textit{Note:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+	 		\end{tabular} 
+	 	}
+	 	\end{table} 
+	 	\FloatBarrier
+	The results of this OLS regression of the two trust outcomes on dummy variables are easy to interpret in terms of significance, but it models the outcome measurement of trust as a continuous variable on a different scale to that used in the experiment.  The results support the first hypothesis (H1) that decision favourability significantly increases citizens level of trust in both the bureaucrat and the municipality trust measures. The paper interprets coefficients as percentage points, i.e "outcome favourability manipulation significantly increases trust in the bureaucrat with 18.8\% points ($p <.001$)". They also reported the Cohen's D results (in above code) indicating large effect sizes (-.78/-.76). They also find significant (but smaller effect sizes) in Models 1 and 2 of the warmth manipulation, again reporting a 9.1\%/4.7\% point increase in trust levels. \\
+	
+	They did not however find evidence for H2 that the effect of outcome favourability would be weaker when bureaucrats showed high warmth versus low warmth behaviour. Evidence for this would have been a significant interaction term in Models 3 and 4,  which would have indicated that the mean difference in trust between unfavourable and favourable outcomes was differed significantly between the high and low warmth conditions.  Against expectations this indicates that warm behaviour by a government employee is not so impactful as to limit the distrust in the government. \\
+	
+	The mean trust scores for experimental groups is displayed below.  
+	\lstinputlisting[language=R, firstline=560, lastline= 576]{replication_EB.R}
+	
+	\begin{table}
+	\caption{Experimental Group Mean Trust}
+	\centering
+	\begin{tabular}{lrr}
+		\toprule
+		Experimental Group & Trust b & Trust m\\
+		\midrule
+		Unfavourable / Low Warmth & 0.338 & 0.359\\
+		Unfavourable / High Warmth & 0.411 & 0.398\\
+		Favourable / Low Warmth & 0.508 & 0.530\\
+		Favourable / High Warmth & 0.617 & 0.585\\
+		\bottomrule
+	\end{tabular}
+	\end{table}
+	\FloatBarrier
+	
+	In order to visualise the interaction effects the author constructs a multi-panel bar chart of the mean trust levels with 95\% confidence intervals for the different trust outcomes and experimental manipulations. A helper function and code used to generate the figure, with minor manipulations for aesthetic purposes is shown below. 
+	\lstinputlisting[language=R, firstline=104, lastline= 138]{replication_EB.R}
+	\lstinputlisting[language=R, firstline=141, lastline= 188
+	]{replication_EB.R}
+	\begin{figure}[!htbp]\centering
+		\caption{Interaction Estimates}
+		\label{fig:plot_1}
+		\includegraphics[width=0.99\linewidth]{figures/figure1.pdf}
+		\caption*{\footnotesize Notes: Effect of the outcome favourability manipulation on trust in the bureaucrat (Panel A) and trust in the municipality (Panel B) conditional on the warmth treatment.
+		Bars are means and lines are 95\% CIs. $***p < 0.001..$}
+	\end{figure}
+	\FloatBarrier
+	
+	As explained by Hansen, receiving an unfavourable decision with warmth significantly increases the level of trust in both the bureaucrat and the municipality. However, as warmth increases the trust levels for both favourable decision conditions increase too, suggesting that there is not an interaction effect. \\
+	
+	Hansen concludes that "public leaders should be concerned
+	about whether their employees behave in a warm manner if they want to
+	build greater trust. Either by motivating them to show warmth when interacting
+	with citizens or by taking warmth into consideration when recruiting new
+	bureaucrats." 
+	
+\vspace{1cm}
+\section{My Contribution}
+	The main aim of the experiment is to understand how the different treatments impact the trust ratings given by the participants in the experiment. While the original paper used rescaled OLS models to report the results, there are a number of alternative modelling frameworks that can explore this relationship. After checking the impact of the recoding in OLS I will explore two alternative methods, testing each model's s statistical appropriateness, interpretative value and robustness. 
+	
+	
+
+\subsection{Check: Rescale Trust Measurements and Rerun OLS}
+	The first check performed is to run the OLS models with the initial recorded 0-10 trust scales rather than the revised 0-1 scales. It was not clear from the original paper why this rescaling was performed, so this initial check simply tested what happened if the OLS used the scale directly arising from the experiments rather than the recoded version with changes reported in percentage points. 
+	 
+	Since the data provided already had rescaled the scores, the first step was to create variables in the original integer scale. The four models were ran and the results are displayed in the table below. 
+	\lstinputlisting[language=R, firstline=210, lastline= 227]{replication_EB.R}
+	 
+	
+	% OLS RESCALE RESULTS TABLE
+	% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+	% Date and time: Sat, Mar 28, 2026 - 15:45:13
+	\begin{table}[!htbp] \centering 
+		\caption{OLS 0-10 Scale Regression Results} 
+		\label{} 
+		\resizebox{\textwidth}{!}{
+		\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
+			\\[-1.8ex]\hline 
+			\hline \\[-1.8ex] 
+			& \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
+			\cline{2-5} 
+			\\[-1.8ex] & \shortstack{Trust \\ Bureaucrat} & \shortstack{Trust \\ Municipality} & \shortstack{Trust \\ Bureaucrat} & \shortstack{Trust \\ Municipality} \\ 
+			\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
+			\hline \\[-1.8ex] 
+			Outcome favorability (OF) & 1.880$^{***}$ & 1.791$^{***}$ & 1.707$^{***}$ & 1.711$^{***}$ \\ 
+			& (0.122) & (0.119) & (0.172) & (0.169) \\ 
+			& & & & \\ 
+			Warmth & 0.909$^{***}$ & 0.471$^{***}$ & 0.734$^{***}$ & 0.391$^{**}$ \\ 
+			& (0.122) & (0.119) & (0.172) & (0.169) \\ 
+			& & & & \\ 
+			OF * Warmth &  &  & 0.348 & 0.160 \\ 
+			&  &  & (0.243) & (0.239) \\ 
+			& & & & \\ 
+			Constant & 3.290$^{***}$ & 3.545$^{***}$ & 3.377$^{***}$ & 3.585$^{***}$ \\ 
+			& (0.105) & (0.103) & (0.121) & (0.119) \\ 
+			& & & & \\ 
+			\hline \\[-1.8ex] 
+			Observations & 1,516 & 1,525 & 1,516 & 1,525 \\ 
+			R$^{2}$ & 0.163 & 0.136 & 0.164 & 0.137 \\ 
+			Adjusted R$^{2}$ & 0.162 & 0.135 & 0.163 & 0.135 \\ 
+			Residual Std. Error & 2.366 (df = 1513) & 2.331 (df = 1522) & 2.365 (df = 1512) & 2.331 (df = 1521) \\ 
+			F Statistic & 147.665$^{***}$ (df = 2; 1513) & 120.190$^{***}$ (df = 2; 1522) & 99.197$^{***}$ (df = 3; 1512) & 80.248$^{***}$ (df = 3; 1521) \\ 
+			\hline 
+			\hline \\[-1.8ex] 
+			\textit{Note:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+		\end{tabular} 
+	}
+	\end{table} 
+	\FloatBarrier
+	
+	Comparing the linear regression on the original 0-10 scale to the rescaled version in the paper results in the exact same sign, significance and relative effect sizes of the treatments. The key difference is that the coefficients now represent the expected change in the 0-10 score for the favourability/warmth treatments rather that the proportional change (i.e an average 1.88 point increase in trust score vs a 0.18\% point increase). 
+	 As the results are identical but only shifted by a factor of 10 both versions are able to reported (depending on the desired interpretability). 
+
+\vspace{1cm}
+\subsection{Ordered Multinomial Regression}
+
+	The potential issue of using OLS models in this case is that OLS assumes the outcome variable is continuous and unbounded. The 0-10 scale is technically both ordinal and bounded and therefore using OLS may violate assumptions. As the only explanatory variables are dummy coded, there is not an issue with predicted values being outwith the scale, however it does fundamentally ignore how the data was sourced and its ordinal nature. \\
+	Therefore, an ordered multinomial regression was tested as it would be able to properly respect the ordinal nature of the source data. The coefficients in this case represent how the treatments change the log-odds of being in a higher category of the trust outcome.     \\
+
+	Four ordered multinomial models are run using the MASS 'polr' function with the coefficients and cut-off points displayed in the table below. 
+	\lstinputlisting[language=R, firstline=230, lastline= 250]{replication_EB.R}
+	
+	% Ordered Multinomials Coefficients and Cutoffs
+	\begin{table}[htbp]
+	\begin{center}
+		\caption{Ordered Multinomial Regression Coefficients and Cutoffs}
+		\resizebox{\textwidth}{!}{
+		\begin{tabular}{l c c c c}
+			\hline
+			& \shortstack{Trust \\ Bureaucrat} & \shortstack{Trust \\ Municipality} & \shortstack{Trust \\ Bureaucrat} & \shortstack{Trust \\ Municipality} \\
+			\hline
+			of\_treatment1                    & $1.409 \; (0.096)^{***}$  & $1.350 \; (0.095)^{***}$  & $1.265 \; (0.131)^{***}$  & $1.304 \; (0.131)^{***}$  \\
+			warmth\_treatment1                & $0.692 \; (0.091)^{***}$  & $0.333 \; (0.090)^{***}$  & $0.545 \; (0.129)^{***}$  & $0.288 \; (0.127)^{*}$    \\
+			0|1                               & $-1.407 \; (0.101)^{***}$ & $-1.675 \; (0.105)^{***}$ & $-1.476 \; (0.110)^{***}$ & $-1.697 \; (0.114)^{***}$ \\
+			1|2                               & $-1.072 \; (0.094)^{***}$ & $-1.338 \; (0.096)^{***}$ & $-1.142 \; (0.103)^{***}$ & $-1.360 \; (0.106)^{***}$ \\
+			2|3                               & $-0.402 \; (0.085)^{***}$ & $-0.642 \; (0.086)^{***}$ & $-0.475 \; (0.097)^{***}$ & $-0.665 \; (0.097)^{***}$ \\
+			3|4                               & $0.279 \; (0.084)^{***}$  & $0.033 \; (0.083)$        & $0.202 \; (0.096)^{*}$    & $0.009 \; (0.095)$        \\
+			4|5                               & $0.722 \; (0.085)^{***}$  & $0.535 \; (0.084)^{***}$  & $0.645 \; (0.097)^{***}$  & $0.511 \; (0.096)^{***}$  \\
+			5|6                               & $1.538 \; (0.092)^{***}$  & $1.352 \; (0.090)^{***}$  & $1.462 \; (0.103)^{***}$  & $1.329 \; (0.101)^{***}$  \\
+			6|7                               & $2.122 \; (0.099)^{***}$  & $1.989 \; (0.097)^{***}$  & $2.049 \; (0.109)^{***}$  & $1.965 \; (0.107)^{***}$  \\
+			7|8                               & $3.035 \; (0.114)^{***}$  & $2.940 \; (0.112)^{***}$  & $2.967 \; (0.121)^{***}$  & $2.917 \; (0.121)^{***}$  \\
+			8|9                               & $4.318 \; (0.152)^{***}$  & $4.112 \; (0.150)^{***}$  & $4.255 \; (0.157)^{***}$  & $4.090 \; (0.156)^{***}$  \\
+			9|10                              & $5.271 \; (0.209)^{***}$  & $4.934 \; (0.201)^{***}$  & $5.210 \; (0.213)^{***}$  & $4.912 \; (0.205)^{***}$  \\
+			of:warmth &                           &                           & $0.291 \; (0.181)$        & $0.091 \; (0.179)$        \\
+			\hline
+			AIC                               & $6578.058$                & $6633.675$                & $6577.459$                & $6635.420$                \\
+			BIC                               & $6641.944$                & $6697.632$                & $6646.669$                & $6704.707$                \\
+			Log Likelihood                    & $-3277.029$               & $-3304.838$               & $-3275.729$               & $-3304.710$               \\
+			Deviance                          & $6554.058$                & $6609.675$                & $6551.459$                & $6609.420$                \\
+			Num. obs.                         & $1516$                    & $1525$                    & $1516$                    & $1525$                    \\
+			\hline
+			\multicolumn{5}{l}{\scriptsize{$^{***}p<0.001$; $^{**}p<0.01$; $^{*}p<0.05$}}
+		\end{tabular}
+	}
+	\end{center}
+	\end{table}
+	\FloatBarrier
+	
+	% Ordered Multinomial Just Coefficients
+	\begin{table}[htbp]
+		\begin{center}
+			\caption{Ordered Multinomial Regression Coefficients}
+			\resizebox{\textwidth}{!}{
+				\begin{tabular}{l c c c c}
+					\hline
+					& \shortstack{Trust \\ Bureaucrat} & \shortstack{Trust \\ Municipality} & \shortstack{Trust \\ Bureaucrat} & \shortstack{Trust \\ Municipality} \\
+					\hline
+					of\_treatment1                    & $1.409 \; (0.096)^{***}$  & $1.350 \; (0.095)^{***}$  & $1.265 \; (0.131)^{***}$  & $1.304 \; (0.131)^{***}$  \\
+					warmth\_treatment1                & $0.692 \; (0.091)^{***}$  & $0.333 \; (0.090)^{***}$  & $0.545 \; (0.129)^{***}$  & $0.288 \; (0.127)^{*}$    \\
+					of:warmth &                           &                           & $0.291 \; (0.181)$        & $0.091 \; (0.179)$        \\
+					\hline
+					\multicolumn{5}{l}{\scriptsize{$^{***}p<0.001$; $^{**}p<0.01$; $^{*}p<0.05$}}
+				\end{tabular}
+			}
+		\end{center}
+	\end{table}
+	\FloatBarrier
+	
+	This regression treats the outcomes levels 0-10 as separate categories on an ordinal scale and the coefficient refers to whether the log-odds of being in a higher category changes in each treatment. \\
+	
+	For example for model 1 and holding all else constant, participants in the warmth condition have on average about 2 times higher odds of choosing a higher trust category than those not in the warmth treatment ($OR = e^{0.692} \approx 1.99$). This positive and significant effect is repeated for the outcome favourability condition with participants receiving a favourable condition having about 5 times higher odds of choosing a higher trust category than those receiving unfavourable decision all things equal. This pattern is repeated with slightly lower coefficients for the model on trust in the municipality. Adding an interaction term of the treatments for both models results in the interaction term being positive but not statistically significant, indicating that there is not strong evidence that the effect of warmth depends on the outcome favourability treatment. These results are comparable in meaning to the OLS results, further supporting the paper conclusion that the effect of outcome and warmth treatments are additive. \\
+	
+	Although the interpretation is slightly less intuitive than OLS, this approach does make movement across the ordinal responses clear. However the predicted category values themselves are not especially meaningful, suggesting that using this method may not be worth the additional complexity. Moreover this approach also requires the assumption of proportional odds that the effect of the treatments are the same across all thresholds of the outcome, which may not be the case in this trust scale. \\
+		
+	To obtain more interpretable results, the predicted probabilities of categories for each treatment group was calculated and then converted into an expected trust measure. By producing a table of actual expected scores of trust the differences between group prediction is clear.
+	 \lstinputlisting[language=R, firstline=253, lastline= 286]{replication_EB.R}
+	 After preparing the data and creating a helping function the predicted trust values for each group for each model were calculated and presented in the table and plot below. 
+	 \lstinputlisting[language=R, firstline=288, lastline= 329]{replication_EB.R}
+	% Predicted Value of Trust 
+	% latex table generated in R 4.5.1 by xtable 1.8-4 package
+	% Sun Mar 29 16:29:46 2026
+	\begin{table}[ht]
+		\centering
+		\caption{Ordered Multinomial Regression Predicted Trust by Experimental Group and Model}
+		\resizebox{\textwidth}{!}{
+		\begin{tabular}{rlrrrr}
+			\hline
+			& Group & Trust B & Trust M & Trust B (int) & Trust M (int) \\ 
+			\hline
+			1 & Unfavourable / Low Warmth & 3.25 & 3.55 & 3.35 & 3.58 \\ 
+			2 & Favourable / Low Warmth & 5.18 & 5.35 & 5.09 & 5.32 \\ 
+			3 & Unfavourable / High Warmth & 4.20 & 4.00 & 4.10 & 3.97 \\ 
+			4 & Favourable / High Warmth & 6.07 & 5.78 & 6.16 & 5.80 \\ 
+			\hline
+		\end{tabular}
+	} 
+	\end{table}
+	\FloatBarrier
+	
+	\begin{figure}[!htbp]\centering
+		\caption{Ordered Multinomial Regressions: Predicted Trust}
+		\label{fig:plot_3}
+	\includegraphics[width=0.99\linewidth]{figures/OMR_pred_trust.pdf}
+	\end{figure}
+	\FloatBarrier
+	
+	This plot displays the expected trust scores on the original 0-10 as predicted by the ordered multinomial regression. 
+	For example, participants in the 'Unfavourable / Low Warmth' group had an average predicted trust in the bureaucrats of around 3.25/10 (or 3.35 with the interaction term). Comparing this to the 'actual' experimental group mean (see Table 3) of 0.338 (or 3.38/10) we can see the predicted value is reasonably close to the observed means suggesting that the ordered regression fits reasonably well. There are some differences in the results, which are likely due to the model smoothing where it uses cumulative probabilities.  
+		
+\vspace{1cm}
+		
+\subsection{Ordered Beta Regression}
+\vspace{0.5cm}
+	A different alternative to OLS using the 0-1 scale of trust as used in the original OLS is ordered beta regression. This is a type of regression explicitly designed for outcome data that has an ordinal and bounded structure.  It combines beta regression defined for any bounded continuous scale and the ordered logit that uses discrete categories.  It is beneficial as it produces intelligible estimates that respect the bounds of the dependent variable, assuming that there is an unobserved continuous scale (latent variable in this case trust that is then mapped to the observed scale using the cut-points.)  It models heteroscedasticity naturally, is better at handling skewed distributions than OLS and is statistically the most rigorous for the scaled ratings. \\
+	
+	
+	The package 'ordbetareg' estimates a Bayesian implementation (Markov chain Monte Carlo (MCMC) for the regression using 'brms' a package that specialises in Bayesian regression. This runs four independent chains that iterate and look to find the most likely range of values (i.e. the posterior distribution) for the models parameters, basing the final model on the 4000 total draws. \\
+	
+	
+	
+	After setting the seed and path to `cmdstanr`, the four ordered beta regressions were ran using the original trust measures scaled [0,1]. Given the difficulty of exporting the packages a reduced section of the summary output is displayed below.
+	
+	\lstinputlisting[language=R, firstline=331, lastline= 352]{replication_EB.R}
+	
+	{\small
+		\begin{Verbatim}
+Family: ord_beta_reg 
+Links: mu = identity 
+Data: data (Number of observations: 1516) 
+Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1; ... 
+
+Regression Coefficients:
+
+Formula: trust_b ~ of_treatment + warmth_treatment  
+		  Estimate   Est.Error l-95% CI u-95% CI Rhat  Bulk_ESS  Tail_ESS
+Intercept            -0.43      0.04    -0.51    -0.36   1.00     5214     3080
+of_treatment1         0.59      0.04     0.50     0.67   1.00     5742     3106
+warmth_treatment1     0.30      0.04     0.22     0.38   1.00     4354     2850
+
+Formula: trust_m ~ of_treatment + warmth_treatment 
+		  Estimate   Est.Error l-95% CI u-95% CI Rhat  Bulk_ESS  Tail_ESS
+Intercept            -0.36      0.03    -0.43    -0.29   1.00     4777     3196
+of_treatment1         0.57      0.04     0.49     0.65   1.00     4874     3159
+warmth_treatment1     0.14      0.04     0.07     0.22   1.00     4762     2931
+
+Formula: trust_b ~ of_treatment * warmth_treatment 
+		  Estimate   Est.Error l-95% CI u-95% CI Rhat  Bulk_ESS  Tail_ESS
+Intercept            -0.40      0.04    -0.49    -0.32   1.00     2445     3084
+of_treatment1         0.53      0.06     0.41     0.64   1.00     2506     2801
+warmth_treatment1     0.24      0.06     0.12     0.35   1.00     2298     2566
+of:warmth             0.12      0.08    -0.03     0.28   1.00     2056     2702
+
+Formula: trust_m ~ of_treatment * warmth_treatment
+		  Estimate   Est.Error l-95% CI u-95% CI Rhat  Bulk_ESS  Tail_ESS
+Intercept             -0.35      0.04    -0.43    -0.27  1.00     2603     2600
+of_treatment1          0.54      0.06     0.43     0.65  1.00     2687     3248
+warmth_treatment1      0.11      0.06     0.00     0.23  1.00     2593     3062
+of:warmth              0.06      0.08    -0.10     0.22  1.00     2248     2618
+		\end{Verbatim}
+	} \FloatBarrier
+	
+	The coefficients are interpreted on the log-odds scale of a higher outcome on the rescaled 0-1 scale using a beta distribution. The positive coefficients indicate that being in the treatments increases the odds of being in a higher category. However, the cut-points of the model are not directly meaningful in substantive terms - they are instead  just locations on the latent scale. \\
+	
+	More meaningful values can be derived by looking at the predicted probabilities, values and marginal effects. 
+	To extract the predicted mean values of trust for each group the posterior predicted outcomes for each combination is found (a matrix of predicted values from each raw), the summary statistics on these values are calculated and saved as a table. 
+	\lstinputlisting[language=R, firstline=355, lastline= 431]{replication_EB.R}
+	 
+	%Predicted Mean Trust 
+	\begin{table}
+		\caption{Ordered Beta Regression: Predicted Trust of Experimental Groups with Confidence intervals}
+		\centering
+		\resizebox{\textwidth}{!}{
+	\begin{tabular}{lllll}
+		\toprule
+		treatment & Trust Bureaucrat & Trust Municipality & Trust Bureaucrat (int) & Trust Municipality (int)\\
+		\midrule
+		Unfavourable / Low Warmth & 0.35 [0.33, 0.37] & 0.37 [0.35, 0.39] & 0.35 [0.33, 0.38] & 0.37 [0.35, 0.40]\\
+		Unfavourable / High Warmth & 0.43 [0.41, 0.45] & 0.41 [0.39, 0.43] & 0.42 [0.40, 0.44] & 0.40 [0.38, 0.43]\\
+		Favourable / Low Warmth & 0.50 [0.48, 0.52] & 0.52 [0.50, 0.54] & 0.50 [0.47, 0.52] & 0.52 [0.50, 0.54]\\
+		Favourable / High Warmth & 0.58 [0.57, 0.60] & 0.56 [0.54, 0.58] & 0.59 [0.57, 0.61] & 0.57 [0.54, 0.59]\\
+		\bottomrule
+	\end{tabular}
+	}
+	\end{table}
+	\FloatBarrier
+	\vspace{0.5cm}
+	Here we can see the predicted mean trust measure on the 0-1 scale as predicted by the ordered beta regression. The predicted trust mean is relatively consistent with the actual mean values for each group (compared to Table 3). The Unfavourable/ High Warmth category is slightly higher than the real average for the Trust in the Bureaucrat . The prediction for Favourable/High warmth is lower than the real values (0.58/0.56 compared to 0.62/0.59). For some of the confident intervals the 'true' mean falls out of the predicted range. \\
+	
+	To visualise this more clearly the predicted means of each group were plotted. 
+	
+	\lstinputlisting[language=R, firstline=435, lastline= 480]{replication_EB.R}
+	\begin{figure}[!htbp]\centering
+		\caption{Ordered Beta Regressions: Predicted Mean Trust Values by Group}
+		\label{fig:plot_3}
+		\includegraphics[width=0.99\linewidth]{figures/betas_predicted_means.pdf}
+	\end{figure}
+	\FloatBarrier
+	
+	To specifically investigate the second hypothesis as to whether warmth was a mitigating factor on trust, the marginal effect of warmth was found using the ordered beta results. This looks to understand how much increasing warmth (from Low Warmth to High Warmth) changes predicted trust and whether this depends on the outcome favourability. \\
+	For each model the marginal effect of warmth was calculated then by using posterior predictions and calculating the differences between the predictions. In other words, the effect of going warmth in unfavourable outcome condition (of\_treatment = 0 $\rightarrow$ diff\_0) and the favourable treatment (of\_treatment = 1 $\rightarrow$ diff\_1) giving the conditional marginal effects. \\
+	
+	
+	\lstinputlisting[language=R, firstline=487, lastline= 508]{replication_EB.R}
+	\lstinputlisting[language=R, firstline=509, lastline= 528]{replication_EB.R}
+
+	
+	% MArginal Effects Table
+	\begin{table}
+		\caption{Marginal Effects of Warmth Treatment by OF Treatment and Model}
+		\centering
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}[t]{rllll}
+				\toprule
+				of\_treatment & Trust Bureaucrat & Trust Municipality & Trust Bureaucrat (Interaction) & Trust Municipality (Interaction)\\
+				\midrule
+				0 & 0.16 [0.14, 0.18] & 0.15 [0.13, 0.17] & 0.14 [0.11, 0.17] & 0.15 [0.12, 0.17]\\
+				1 & 0.16 [0.14, 0.18] & 0.15 [0.13, 0.17] & 0.17 [0.15, 0.21] & 0.16 [0.13, 0.19]\\
+				\bottomrule
+			\end{tabular}
+		}
+	\end{table}
+	\FloatBarrier
+	
+	The values in the table above represent the marginal effect of warmth on  the predicted trust (0-1) scale returned by the ordered beta regressions.  For example, participants receiving the unfavourable decision (when of\_treatment = 0) the effect of the warmth treatment increases trust in the bureaucrat and the municipality by 0.16 and 0.15 points on average, on the 0-1 scale (for non-interaction models). This marginal effect is exactly the same when participants receive the favourable decision (of\_treatment = 1). \\
+	
+	This suggests that warmth has almost exactly the same effect on trust in the favourable and unfavourable condition providing no evidence that there is a different effect depending on the type of decision. This coincides with the insignificant finding of the interaction term for the previous models. This is clearly displayed in the plot below. \\
+	
+
+	\lstinputlisting[language=R, firstline=535, lastline= 555]{replication_EB.R}
+	
+	\begin{figure}[!htbp]\centering
+		\caption{Ordered Beta Regressions: Marginal Effects of Warmth}
+		\label{fig:plot_3}
+		\includegraphics[width=0.99\linewidth]{figures/betas_me_warmth.pdf}
+	\end{figure}
+	\FloatBarrier
+	
+	\vspace{0.5cm}
+\section{Conclusion}
+
+	The original study was replicated successfully.  I assessed two alternative methods an ordinal multinomial which was designed to reflect the ordinal nature of the data. This showed similar results to the OLS models, made similar predictions and further supported the lack of significant interaction.
+    Secondly, I ran an ordered beta regression as it respected both the ordinal and bounded structure of the rescaled outcome measures. This approach reaffirmed the results from the original OLS study, finding a consistent marginal effect of warmth for both outcome conditions, but with an approach that is specifically designed for bounded ordinal nature of the outcome variable.  
+
+\end{document}
