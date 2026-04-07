@@ -1,0 +1,202 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{xcolor}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{booktabs} 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Problem Set 4}
+\date{Due: April 10, 2026}
+\author{Applied Stats II}
+
+
+\begin{document}
+	\maketitle
+	\section*{Instructions}
+	\begin{itemize}
+	\item Please show your work! You may lose points by simply writing in the answer. If the problem requires you to execute commands in \texttt{R}, please include the code you used to get your answers. Please also include the \texttt{.R} file that contains your code. If you are not sure if work needs to be shown for a particular problem, please ask.
+	\item Your homework should be submitted electronically on GitHub in \texttt{.pdf} form.
+	\item This problem set is due before 23:59 on Friday April 10, 2026. No late assignments will be accepted.
+
+	\end{itemize}
+
+	\vspace{.25cm}
+\section*{Question 1}
+\vspace{.25cm}
+\noindent We're interested in modeling the historical causes of child mortality. We have data from 26855 children born in Skellefteå, Sweden from 1850 to 1884. Using the "child" dataset in the \texttt{eha} library, fit a Cox Proportional Hazard model using mother's age and infant's gender as covariates. Present and interpret the output. \\
+
+
+A Cox proportional hazard model is used to determine the effect of predictors on the hazard of an event occurring. In this case, the impact of the mother's age and infants gender on the hazard of a baby dying in Sweden in the late nineteenth century. The outcome variable of this survival model is therefore whether the child survives i.e. death did not occur. 
+
+
+	\lstinputlisting[language=R, firstline=39, lastline= 46]{PS04_EB.R} 
+	
+	% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+	% Date and time: Sun, Apr 05, 2026 - 10:35:08
+	\begin{table}[!htbp] \centering 
+		\caption{Child Mortality Cox Proportional Hazard Model} 
+		\label{} 
+		\begin{tabular}{@{\extracolsep{5pt}}lc} 
+			\\[-1.8ex]\hline 
+			\hline \\[-1.8ex] 
+			& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+			\cline{2-2} 
+			\\[-1.8ex] & child\_surv \\ 
+			\hline \\[-1.8ex] 
+			m.age & 0.0076$^{***}$ \\ 
+			& (0.0021) \\ 
+			& \\ 
+			sexfemale & $-$0.0822$^{***}$ \\ 
+			& (0.0267) \\ 
+			& \\ 
+			\hline \\[-1.8ex] 
+			Observations & 26,574 \\ 
+			R$^{2}$ & 0.0008 \\ 
+			Max. Possible R$^{2}$ & 0.9858 \\ 
+			Log Likelihood & $-$56,503.4800 \\ 
+			Wald Test & 22.5200$^{***}$ (df = 2) \\ 
+			LR Test & 22.5178$^{***}$ (df = 2) \\ 
+			Score (Logrank) Test & 22.5300$^{***}$ (df = 2) \\ 
+			\hline 
+			\hline \\[-1.8ex] 
+			\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+		\end{tabular} 
+	\end{table} 
+	\FloatBarrier
+	
+	On average, a one year increase in mother's age is associated with a 0.0076 increase in the expected log of the hazard for babies, holding sex constant.
+	There is also on average a 0.0822 decrease in the expected log of the hazard for female babies compared to male, holding mother's age constant. 
+	Both of these coefficients are statistically significant at the 99\% level  $p<0.01$. 
+	
+	Taking the exponential of the coefficients we return the hazard ratios. 
+	The hazard ratio associated with a one year increase in the mother's age is 1.007 ($e^{0.0076}\approx 1.007$) holding sex constant, i.e. older mothers are more likely to suffer child mortality, with a one-year increase in mother's age associated with a 0.7\%  increase in the hazard of the baby dying.
+	The hazard ratio of female babies is 0.92 ($e^{-0.822}\approx 0.921$) that of male babies holding mother's age constant, i.e. female babies are less likely to die with the hazard of female deaths being 8\% lower compared to males. 
+	
+	To assess the model quality a likelihood ratio test was ran testing each coefficient individually determining that both mother's age and sex of the baby were statistically significant predictors of the hazard of the child mortality. ($p<0.05$ in both cases). 
+	
+	\lstinputlisting[language=R, firstline=47, lastline= 47]{PS04_EB.R} 
+	\begin{Verbatim}
+		Single term deletions
+		
+		Model:
+		child_surv ~ m.age + sex
+		Df    AIC     LRT  Pr(>Chi)    
+		<none>    113011                      
+		m.age   1 113022 12.7946 0.0003476 ***
+		sex     1 113018  9.4646 0.0020947 ** 
+		---
+		Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+	\end{Verbatim}
+\section*{Question 2}
+\vspace{.25cm}
+\noindent We want to estimate how the amount of damage caused by a disaster relates to (1) whether disaster relief is provided and (2) the amount of relief that is provided  conditional on a donation occurring when a disaster hits a given country. Estimate a Heckman selection model using the \texttt{disasters\_response} data on \href{https://raw.githubusercontent.com/ASDS-TCD/StatsII_2026/refs/heads/main/datasets/disaster_response.csv}{GitHub} in which \texttt{binContribution} is the outcome for the selection equation, and \texttt{originalContributionMillionUSDLogged} is the outcome for the second equation. Use \texttt{occurrences  + deathsEM + normalizedDamageEMLogged} as your input variables for both equations. Present and interpret the output. \\
+
+
+ The Heckman model looks to address the issue of selection bias where the sample is in some way not representative of the entire population and therefore cannot model true 'average' effects. It has two parts first a probit model that calculates the probability of selection, followed by linear model to analyse the outcome in the attempt to produce unbiased estimates. \\
+ 
+ 
+ In this case, exploring disaster relief the probit equation to estimate the selection process estimates who provides disaster relief and then the linear model on how much relief is provided conditional if a disaster hits.  Firstly a base OLS model is ran with 'originalContributoinMillionUSDLogged' as the outcome and predictors being the occurrences, deaths and damage  (normalised and logged) of disaster where disaster relief is provided (binControbution == 1).  
+
+\begin{table}
+	\begin{center}
+		\caption{Base and Full Heckman on Disaster Relief}
+		\begin{tabular}{l c c}
+			\toprule
+			& Base Heckman & Full Heckman \\
+			\midrule
+			(Intercept)                 & $-1.3818^{***}$ & $-1.3020^{***}$ \\
+			& $(0.0565)$      & $(0.0180)$      \\
+			occurrences                 & $0.0140^{**}$   & $0.0192^{***}$  \\
+			& $(0.0051)$      & $(0.0017)$      \\
+			deathsEM                    & $0.0131^{***}$  & $0.0115^{***}$  \\
+			& $(0.0011)$      & $(0.0007)$      \\
+			normalizedDamageEMLogged    & $0.0007$        & $0.0211^{***}$  \\
+			& $(0.0030)$      & $(0.0009)$      \\
+			O: (Intercept)              &                 & $9.7663$        \\
+			&                 & $(6.0440)$      \\
+			O: occurrences              &                 & $-0.0863$       \\
+			&                 & $(0.0549)$      \\
+			O: deathsEM                 &                 & $-0.0330$       \\
+			&                 & $(0.0257)$      \\
+			O: normalizedDamageEMLogged &                 & $-0.1142$       \\
+			&                 & $(0.0623)$      \\
+			\midrule
+			N                           & $3248.0000$     & $49096.0000$    \\
+			Sigma                       & $$              & $5.9924$        \\
+			Rho                         & $$              & $-1.0535$       \\
+			\bottomrule
+			\multicolumn{3}{l}{\scriptsize{$^{***}p<0.001$; $^{**}p<0.01$; $^{*}p<0.05$}}
+		\end{tabular}
+		\label{tab:heckman_comparison}
+	\end{center}
+\end{table}
+	\FloatBarrier
+\vspace*{0.5cm}
+ The results of the base OLS regression explores given aid being given how do the predictors determine the amount that is given. The results suggests that the occurrences and deaths are statistically significant predictors, and a one unit increase is associated with on average a 0.014 and 0.013  increase in origialContributionMillionUSDlogged respectively, holding all else constant. The amount Damage (normalizedDamageEMLogged) does not appear to have a statistically reliable effect. This model is estimated using a non-random subsample (binContribution == 1) excluding cases where disaster relief was not provided.  \\
+ 
+ 
+ For the Heckman equation the selection equation looks at how the factors influence whether a country received any relief at all (contribution is binary) then the outcome coefficients looks at how much the relief is contributed. The results show that whilst all the coefficients for the selection equation were statistically significant ($p<0.001$), none of the outcome coefficients were significant. This would indicate that occurrences, deathsEM and normalizedDamageEMLogged are significant predictors of whether any contribution occurs but not how much relief is received once it happens.  \\
+ 
+ 
+However we can also see from the summary results the inverse Mill Ratio ($\lambda$) is -6.313, $p=.0649$, indicating  selection bias is unlikely to be a significant issue.  The lack of significant coefficients in the outcome equation is potentially due to a lack of variation outcome variable i.e. the amount of disaster relief if it is given. It is also interesting to see that the significance of the predictors differs in the base linear model, potentially due to using the exact same predictors in the selection/outcome or the way Heckman estimates results in greater uncertainty (as the outcome coefficients have much larger standard errors than the linear model counterparts).  \\
+ 
+ \lstinputlisting[language=R, firstline=54, lastline= 140]{PS04_EB.R} 
+ 
+\end{document}

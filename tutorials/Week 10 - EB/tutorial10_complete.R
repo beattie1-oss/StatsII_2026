@@ -112,9 +112,23 @@ summary(m.tobit <- vglm(satMath ~ ., tobit(Lower = 200, Upper = 800), education_
 
 mean(data$job > 2, na.rm = TRUE)
 
+long_data <- read.table("http://statmath.wu.ac.at/courses/StatsWithR/Long.txt", header=T)
+
+
+library(sampleSelection)
+data("Mroz87")
 
 # Heckman 
 heck <- selection(
   selection = lfp ~ educ + exper + age + kids5,
-  outcome = wage ~ 
+  outcome = wage ~ educ + exper + age + kids5,
+  data = Mroz87
 )
+summary(heck)
+
+heck2 <-  heckit(
+  selection = lfp ~ educ + exper + age + kids5,
+  outcome = wage ~ educ + exper + age + kids5,
+  data = Mroz87
+)
+summary(heck2)
